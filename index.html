@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Neon Calculator</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
+body{background:#000;display:flex;justify-content:center;align-items:center;min-height:100vh}
+.calc{width:350px;background:#111;border-radius:40px;padding:20px;box-shadow:0 0 30px #0ff,0 0 60px #f0f;border:2px solid #0ff3}
+.display{height:130px;background:#000;border-radius:20px;margin-bottom:15px;padding:15px;text-align:right;border:1px solid #0ff}
+#curr{color:#0ff;font-size:44px;text-shadow:0 0 15px #0ff}
+#prev{color:#f0f;font-size:16px}
+.buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+button{height:65px;border-radius:18px;border:none;font-size:24px;background:#222;color:#fff}
+button:active{transform:scale(0.9)}
+.num{color:#0ff}.op{color:#f0f;background:#f0f2}
+.equal{background:linear-gradient(45deg,#0ff,#f0f);color:#000;font-weight:bold}
+.zero{grid-column:span 2}
+</style>
+</head>
+<body>
+<div class="calc">
+<div class="display"><div id="prev"></div><div id="curr">0</div></div>
+<div class="buttons">
+<button onclick="clearAll()">AC</button><button onclick="back()">⌫</button><button class="op" onclick="add('%')">%</button><button class="op" onclick="add('/')">÷</button>
+<button class="num" onclick="add('7')">7</button><button class="num" onclick="add('8')">8</button><button class="num" onclick="add('9')">9</button><button class="op" onclick="add('*')">×</button>
+<button class="num" onclick="add('4')">4</button><button class="num" onclick="add('5')">5</button><button class="num" onclick="add('6')">6</button><button class="op" onclick="add('-')">−</button>
+<button class="num" onclick="add('1')">1</button><button class="num" onclick="add('2')">2</button><button class="num" onclick="add('3')">3</button><button class="op" onclick="add('+')">+</button>
+<button class="num zero" onclick="add('0')">0</button><button class="num" onclick="add('.')">.</button><button class="equal" onclick="calc()">=</button>
+</div></div>
+<script>
+let e='';const c=document.getElementById('curr'),p=document.getElementById('prev');
+function add(v){e+=v;c.innerText=e}
+function clearAll(){e='';c.innerText='0';p.innerText=''}
+function back(){e=e.slice(0,-1);c.innerText=e||'0'}
+function calc(){try{let r=eval(e.replace(/%/g,'/100'));p.innerText=e+' =';c.innerText=r;e=r.toString()}catch{c.innerText='Error';e=''}}
+</script>
+</body>
+</html>
