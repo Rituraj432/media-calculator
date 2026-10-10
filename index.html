@@ -3,114 +3,202 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Neon Calculator</title>
+<title>Neon Cartoon Calculator</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&display=swap');
-  *{margin:0;padding:0;box-sizing:border-box;font-family:'Baloo 2',cursive}
-  body{background:#0a0a0a;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:15px}
-  .calc{width:100%;max-width:360px;background:#111;border-radius:40px;padding:20px;box-shadow:0 0 30px #00f5ff, 0 0 60px #a100ff;position:relative;border:2px solid #222}
-  .display{background:#000;border:2px solid #00f5ff;border-radius:25px;padding:18px 15px;min-height:110px;display:flex;flex-direction:column;justify-content:center;align-items:flex-end;overflow:hidden;margin-bottom:18px}
-  .history{color:#ff00ff;font-size:14px;opacity:0.8;min-height:18px;max-width:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-  .result{color:#00f5ff;font-size:42px;font-weight:600;line-height:1.1;width:100%;text-align:right;word-wrap:break-word;transition:font-size 0.2s}
-  .result.small{font-size:28px}
-  .result.xsmall{font-size:20px}
-  .buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-  button{height:65px;border:none;border-radius:18px;background:#1e1e1e;color:#00f5ff;font-size:24px;cursor:pointer;transition:0.15s;box-shadow:inset 0 0 10px rgba(0,0,0,0.8)}
-  button:active{transform:scale(0.92);box-shadow:0 0 15px #00f5ff}
-  .op{background:#2a0a2a;color:#ff00ff}
-  .op:active{box-shadow:0 0 15px #ff00ff}
-  .equal{background:linear-gradient(135deg,#00f5ff,#a100ff);color:#000;font-weight:bold}
-  .zero{grid-column:span 2}
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Baloo 2', cursive; }
+  
+  /* Added overflow: hidden to prevent any scrollbars from floating elements */
+  body { 
+    background: #0a0a0a; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    min-height: 100vh; 
+    padding: 15px; 
+    overflow: hidden; 
+    position: relative;
+  }
+  
+  .calc-container {
+    position: relative;
+    z-index: 10;
+  }
+
+  .calc { 
+    width: 100%; 
+    min-width: 320px;
+    max-width: 360px; 
+    background: #111; 
+    border-radius: 40px; 
+    padding: 20px; 
+    box-shadow: 0 0 30px #00f5ff, 0 0 60px #a100ff; 
+    position: relative; 
+    border: 2px solid #222; 
+    z-index: 2;
+  }
+  
+  .display { background: #000; border: 2px solid #00f5ff; border-radius: 25px; padding: 18px 15px; min-height: 110px; display: flex; flex-direction: column; justify-content: center; align-items: flex-end; overflow: hidden; margin-bottom: 18px; }
+  
+  .history { color: #ff00ff; font-size: 14px; opacity: 0.8; min-height: 18px; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  
+  .result { color: #00f5ff; font-size: 42px; font-weight: 600; line-height: 1.1; width: 100%; text-align: right; word-break: break-all; transition: font-size 0.2s; }
+  .result.small { font-size: 28px; }
+  .result.xsmall { font-size: 22px; }
+  
+  .buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  
+  button { height: 65px; border: none; border-radius: 18px; background: #1e1e1e; color: #00f5ff; font-size: 24px; cursor: pointer; transition: 0.15s; box-shadow: inset 0 0 10px rgba(0,0,0,0.8); position: relative; z-index: 3;}
+  button:active { transform: scale(0.92); box-shadow: 0 0 15px #00f5ff; }
+  
+  .op { background: #2a0a2a; color: #ff00ff; }
+  .op:active { box-shadow: 0 0 15px #ff00ff; }
+  
+  .equal { background: linear-gradient(135deg, #00f5ff, #a100ff); color: #000; font-weight: bold; }
+  .zero { grid-column: span 2; }
+
+  /* Cartoon Decorations CSS */
+  .cartoon {
+    position: absolute;
+    pointer-events: none; /* Crucial: Prevents cartoons from blocking button clicks */
+    z-index: 5;
+    filter: drop-shadow(0 0 15px rgba(0, 245, 255, 0.4));
+    animation: float 4s ease-in-out infinite;
+  }
+
+  .ufo {
+    width: 85px;
+    top: -45px;
+    left: -35px;
+    animation-delay: 0s;
+  }
+
+  .planet {
+    width: 70px;
+    bottom: -30px;
+    right: -25px;
+    animation-delay: 1.5s;
+    filter: drop-shadow(0 0 15px rgba(161, 0, 255, 0.5));
+  }
+
+  .astro {
+    width: 65px;
+    top: 40%;
+    right: -35px;
+    animation-delay: 0.7s;
+  }
+
+  /* Floating Animation */
+  @keyframes float {
+    0% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(5deg); }
+    100% { transform: translateY(0px) rotate(0deg); }
+  }
 </style>
 </head>
 <body>
-<div class="calc">
-  <div class="display">
-    <div class="history" id="history"></div>
-    <div class="result" id="result">0</div>
-  </div>
-  <div class="buttons">
-    <button onclick="clearAll()">AC</button>
-    <button onclick="back()">⌫</button>
-    <button class="op" onclick="press('%')">%</button>
-    <button class="op" onclick="press('/')">÷</button>
-    <button onclick="press('7')">7</button>
-    <button onclick="press('8')">8</button>
-    <button onclick="press('9')">9</button>
-    <button class="op" onclick="press('*')">×</button>
-    <button onclick="press('4')">4</button>
-    <button onclick="press('5')">5</button>
-    <button onclick="press('6')">6</button>
-    <button class="op" onclick="press('-')">−</button>
-    <button onclick="press('1')">1</button>
-    <button onclick="press('2')">2</button>
-    <button onclick="press('3')">3</button>
-    <button class="op" onclick="press('+')">+</button>
-    <button class="zero" onclick="press('0')">0</button>
-    <button onclick="press('.')">.</button>
-    <button class="equal" onclick="calculate()">=</button>
+
+<div class="calc-container">
+  <!-- Cute Cartoon Images -->
+  <img src="https://www.svgrepo.com/show/295328/ufo-alien.svg" alt="UFO" class="cartoon ufo">
+  <img src="https://www.svgrepo.com/show/295333/planet-earth.svg" alt="Planet" class="cartoon planet">
+  <img src="https://www.svgrepo.com/show/404780/astronaut.svg" alt="Astronaut" class="cartoon astro">
+
+  <div class="calc">
+    <div class="display">
+      <div class="history" id="history"></div>
+      <div class="result" id="result">0</div>
+    </div>
+    <div class="buttons">
+      <button onclick="clearAll()">AC</button>
+      <button onclick="back()">⌫</button>
+      <button class="op" onclick="press('%')">%</button>
+      <button class="op" onclick="press('/')">÷</button>
+      <button onclick="press('7')">7</button>
+      <button onclick="press('8')">8</button>
+      <button onclick="press('9')">9</button>
+      <button class="op" onclick="press('*')">×</button>
+      <button onclick="press('4')">4</button>
+      <button onclick="press('5')">5</button>
+      <button onclick="press('6')">6</button>
+      <button class="op" onclick="press('-')">−</button>
+      <button onclick="press('1')">1</button>
+      <button onclick="press('2')">2</button>
+      <button onclick="press('3')">3</button>
+      <button class="op" onclick="press('+')">+</button>
+      <button class="zero" onclick="press('0')">0</button>
+      <button onclick="press('.')">.</button>
+      <button class="equal" onclick="calculate()">=</button>
+    </div>
   </div>
 </div>
+
 <script>
 let current = '0';
 let history = '';
 let justCalculated = false; 
+
 const resultEl = document.getElementById('result');
 const historyEl = document.getElementById('history');
 
-function updateDisplay(){
+function updateDisplay() {
   let display = current;
-  if(display.length > 12 && !isNaN(display)){
-    let num = parseFloat(display);
-    if(Math.abs(num) < 1 && num != 0){
+  
+  if (!isNaN(Number(display)) && display.length > 12) {
+    let num = Number(display);
+    if (Math.abs(num) < 1 && num !== 0) {
        display = num.toPrecision(8);
     } else {
-      
-       display = num.toString().length > 12 ? num.toExponential(6) : num.toString();
+       display = num.toExponential(6);
     }
   }
+  
   resultEl.textContent = display;
   
-  resultEl.classList.remove('small','xsmall');
-  if(display.length > 9) resultEl.classList.add('small');
-  if(display.length > 14) resultEl.classList.add('xsmall');
+  resultEl.classList.remove('small', 'xsmall');
+  if (display.length > 9) resultEl.classList.add('small');
+  if (display.length > 14) resultEl.classList.add('xsmall');
 }
 
-function press(val){
+function press(val) {
   const operators = ['+', '-', '*', '/'];
-  
 
-  if(justCalculated){
-    if(operators.includes(val)){
+  if (justCalculated) {
+    if (operators.includes(val)) {
       justCalculated = false; 
-    } else {
+    } else if (val !== '%') {
       current = '0'; 
+      historyEl.textContent = '';
       justCalculated = false;
     }
   }
 
-  if(val === '%'){
+  if (val === '%') {
     try {
+      let exp = current.replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-');
+      if (operators.includes(exp.slice(-1))) exp = exp.slice(0, -1);
       
-      let exp = current.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g, '-');
-      let ans = Function('"use strict";return ('+exp+')')();
+      let ans = Function('"use strict";return (' + exp + ')')();
+      if (!isFinite(ans)) throw 'error';
+      
       current = (ans / 100).toString();
     } catch {
       current = 'Error';
+      updateDisplay();
       setTimeout(clearAll, 1200);
+      return;
     }
   } 
   else if (operators.includes(val)) {
-    
     let lastChar = current.slice(-1);
     if (operators.includes(lastChar)) {
       current = current.slice(0, -1) + val;
     } else {
-      current += val;
+      if (current.length < 24) current += val;
     }
   } 
   else if (val === '.') {
-    
     let parts = current.split(/[\+\-\*\/]/);
     let lastPart = parts[parts.length - 1];
     if (!lastPart.includes('.')) {
@@ -118,14 +206,14 @@ function press(val){
     }
   } 
   else {
-    if(current === '0') current = val;
-    else current += val;
+    if (current === '0') current = val;
+    else if (current.length < 24) current += val;
   }
   
   updateDisplay();
 }
 
-function clearAll(){
+function clearAll() {
   current = '0'; 
   history = '';
   justCalculated = false;
@@ -133,43 +221,43 @@ function clearAll(){
   updateDisplay();
 }
 
-function back(){
-  if(justCalculated){
+function back() {
+  if (justCalculated) {
     historyEl.textContent = '';
     justCalculated = false;
   }
-  current = current.slice(0,-1);
-  if(current === '' || current === '-') current = '0';
+  current = current.slice(0, -1);
+  if (current === '' || current === '-') current = '0';
   updateDisplay();
 }
 
-function calculate(){
-  try{
-    
+function calculate() {
+  try {
     let evalStr = current;
     if (['+', '-', '*', '/'].includes(evalStr.slice(-1))) {
       evalStr = evalStr.slice(0, -1);
     }
-
+    
     history = current + ' =';
     historyEl.textContent = history;
     
-    let exp = evalStr.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g, '-');
-    let ans = Function('"use strict";return ('+exp+')')();
+    let exp = evalStr.replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-');
+    let ans = Function('"use strict";return (' + exp + ')')();
     
-    if(!isFinite(ans)) throw 'error';
-    
+    if (!isFinite(ans)) throw 'error';
     
     ans = parseFloat(ans.toFixed(10)).toString();
     current = ans;
     justCalculated = true; 
+    
     updateDisplay();
-  } catch{
+  } catch {
     current = 'Error';
     updateDisplay();
-    setTimeout(clearAll,1200);
+    setTimeout(clearAll, 1200);
   }
 }
+
 updateDisplay();
 </script>
 </body>
