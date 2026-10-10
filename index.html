@@ -1,40 +1,125 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Neon Calculator</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
-body{background:#000;display:flex;justify-content:center;align-items:center;min-height:100vh}
-.calc{width:350px;background:#111;border-radius:40px;padding:20px;box-shadow:0 0 30px #0ff,0 0 60px #f0f;border:2px solid #0ff3}
-.display{height:130px;background:#000;border-radius:20px;margin-bottom:15px;padding:15px;text-align:right;border:1px solid #0ff}
-#curr{color:#0ff;font-size:44px;text-shadow:0 0 15px #0ff}
-#prev{color:#f0f;font-size:16px}
-.buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-button{height:65px;border-radius:18px;border:none;font-size:24px;background:#222;color:#fff}
-button:active{transform:scale(0.9)}
-.num{color:#0ff}.op{color:#f0f;background:#f0f2}
-.equal{background:linear-gradient(45deg,#0ff,#f0f);color:#000;font-weight:bold}
-.zero{grid-column:span 2}
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Baloo 2',cursive}
+  body{background:#0a0a0a;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:15px}
+  .calc{width:100%;max-width:360px;background:#111;border-radius:40px;padding:20px;box-shadow:0 0 30px #00f5ff, 0 0 60px #a100ff;position:relative;border:2px solid #222}
+  .display{background:#000;border:2px solid #00f5ff;border-radius:25px;padding:18px 15px;min-height:110px;display:flex;flex-direction:column;justify-content:center;align-items:flex-end;overflow:hidden;margin-bottom:18px}
+  .history{color:#ff00ff;font-size:14px;opacity:0.8;min-height:18px;max-width:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .result{color:#00f5ff;font-size:42px;font-weight:600;line-height:1.1;width:100%;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:font-size 0.2s}
+  .result.small{font-size:28px}
+  .result.xsmall{font-size:20px}
+  .buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  button{height:65px;border:none;border-radius:18px;background:#1e1e1e;color:#00f5ff;font-size:24px;cursor:pointer;transition:0.15s;box-shadow:inset 0 0 10px rgba(0,0,0,0.8)}
+  button:active{transform:scale(0.92);box-shadow:0 0 15px #00f5ff}
+  .op{background:#2a0a2a;color:#ff00ff}
+  .op:active{box-shadow:0 0 15px #ff00ff}
+  .equal{background:linear-gradient(135deg,#00f5ff,#a100ff);color:#000;font-weight:bold}
+  .zero{grid-column:span 2}
 </style>
 </head>
 <body>
 <div class="calc">
-<div class="display"><div id="prev"></div><div id="curr">0</div></div>
-<div class="buttons">
-<button onclick="clearAll()">AC</button><button onclick="back()">⌫</button><button class="op" onclick="add('%')">%</button><button class="op" onclick="add('/')">÷</button>
-<button class="num" onclick="add('7')">7</button><button class="num" onclick="add('8')">8</button><button class="num" onclick="add('9')">9</button><button class="op" onclick="add('*')">×</button>
-<button class="num" onclick="add('4')">4</button><button class="num" onclick="add('5')">5</button><button class="num" onclick="add('6')">6</button><button class="op" onclick="add('-')">−</button>
-<button class="num" onclick="add('1')">1</button><button class="num" onclick="add('2')">2</button><button class="num" onclick="add('3')">3</button><button class="op" onclick="add('+')">+</button>
-<button class="num zero" onclick="add('0')">0</button><button class="num" onclick="add('.')">.</button><button class="equal" onclick="calc()">=</button>
-</div></div>
+  <div class="display">
+    <div class="history" id="history"></div>
+    <div class="result" id="result">0</div>
+  </div>
+  <div class="buttons">
+    <button onclick="clearAll()">AC</button>
+    <button onclick="back()">⌫</button>
+    <button class="op" onclick="press('%')">%</button>
+    <button class="op" onclick="press('/')">÷</button>
+    <button onclick="press('7')">7</button>
+    <button onclick="press('8')">8</button>
+    <button onclick="press('9')">9</button>
+    <button class="op" onclick="press('*')">×</button>
+    <button onclick="press('4')">4</button>
+    <button onclick="press('5')">5</button>
+    <button onclick="press('6')">6</button>
+    <button class="op" onclick="press('-')">−</button>
+    <button onclick="press('1')">1</button>
+    <button onclick="press('2')">2</button>
+    <button onclick="press('3')">3</button>
+    <button class="op" onclick="press('+')">+</button>
+    <button class="zero" onclick="press('0')">0</button>
+    <button onclick="press('.')">.</button>
+    <button class="equal" onclick="calculate()">=</button>
+  </div>
+</div>
 <script>
-let e='';const c=document.getElementById('curr'),p=document.getElementById('prev');
-function add(v){e+=v;c.innerText=e}
-function clearAll(){e='';c.innerText='0';p.innerText=''}
-function back(){e=e.slice(0,-1);c.innerText=e||'0'}
-function calc(){try{let r=eval(e.replace(/%/g,'/100'));p.innerText=e+' =';c.innerText=r;e=r.toString()}catch{c.innerText='Error';e=''}}
+let current = '0';
+let history = '';
+const resultEl = document.getElementById('result');
+const historyEl = document.getElementById('history');
+
+function updateDisplay(){
+  // format long numbers
+  let display = current;
+  if(display.length > 12 && !isNaN(display)){
+    let num = parseFloat(display);
+    if(Math.abs(num) < 1 && num != 0){
+       display = num.toPrecision(8);
+    } else {
+       display = num.toExponential(6);
+    }
+  }
+  resultEl.textContent = display;
+  
+  // auto shrink font
+  resultEl.classList.remove('small','xsmall');
+  if(display.length > 9) resultEl.classList.add('small');
+  if(display.length > 14) resultEl.classList.add('xsmall');
+}
+
+function press(val){
+  if(val === '%'){
+    if(current !== '0'){
+      current = (parseFloat(current)/100).toString();
+    }
+  } else {
+    if(current === '0' && val !== '.') current = val;
+    else {
+      if(current.length < 15) current += val;
+    }
+  }
+  updateDisplay();
+}
+
+function clearAll(){
+  current = '0'; history = '';
+  historyEl.textContent = '';
+  updateDisplay();
+}
+function back(){
+  current = current.slice(0,-1);
+  if(current === '' || current === '-') current = '0';
+  updateDisplay();
+}
+function calculate(){
+  try{
+    history = current + ' =';
+    historyEl.textContent = history;
+    // safe eval
+    let exp = current.replace(/×/g,'*').replace(/÷/g,'/');
+    let ans = Function('"use strict";return ('+exp+')')();
+    if(!isFinite(ans)) throw 'error';
+    // round floating errors
+    ans = parseFloat(ans.toFixed(10)).toString();
+    current = ans;
+    updateDisplay();
+  } catch{
+    current = 'Error';
+    updateDisplay();
+    setTimeout(clearAll,1200);
+  }
+}
+updateDisplay();
 </script>
 </body>
-</html>
+      </html>
