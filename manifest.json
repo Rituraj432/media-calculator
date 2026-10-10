@@ -1,0 +1,20 @@
+{
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "Media Calculator",
+  "orientation": "any",
+  "scope": "/media-calculator/",
+  "short_name": "Media Calculator",
+  "start_url": "/media-calculator/",
+  "theme_color": "#ffffff",
+  "id": "https://rituraj432.github.io/media-calculator/",
+  "description": "A sleek, open-source calculator built with elegance and privacy in mind. Features a clean modern UI, lightning-fast performance, and absolute privacy with zero trackers or ads.",
+  "lang": "en",
+  "display_override": [
+    "standalone",
+    "window-controls-overlay",
+    "browser",
+    "fullscreen"
+  ]
+}
