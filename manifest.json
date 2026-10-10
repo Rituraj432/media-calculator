@@ -1,20 +1,18 @@
 {
-  "background_color": "#ffffff",
-  "dir": "ltr",
-  "display": "standalone",
   "name": "Media Calculator",
-  "orientation": "any",
-  "scope": "/media-calculator/",
-  "short_name": "Media Calculator",
+  "short_name": "MediaCalc",
+  "description": "Fast, beautiful & open-source Media Calculator. No trackers, no ads. 100% private and offline-ready.",
   "start_url": "/media-calculator/",
-  "theme_color": "#ffffff",
+  "scope": "/media-calculator/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
   "id": "https://rituraj432.github.io/media-calculator/",
-  "description": "A sleek, open-source calculator built with elegance and privacy in mind. Features a clean modern UI, lightning-fast performance, and absolute privacy with zero trackers or ads.",
-  "lang": "en",
-  "display_override": [
-    "standalone",
-    "window-controls-overlay",
-    "browser",
-    "fullscreen"
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/891/891175.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
   ]
 }
