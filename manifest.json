@@ -1,22 +1,46 @@
 {
-  "name": "Neon Cartoon Calculator",
-  "short_name": "MediaCalc",
-  "start_url": "./index.html",
+  "id": "/media-calculator/",
+  "name": "Mobile Calculator",
+  "short_name": "Mobile Calc",
+  "description": "A fast and stylish Mobile Calculator with neon cartoon design. Works offline.",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#0a0a0a",
-  "theme_color": "#00f5ff",
+  "orientation": "portrait",
+  "background_color": "#0A0A0A",
+  "theme_color": "#00F5FF",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/891/891175.png",
+      "src": "./icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/891/891175.png",
+      "src": "./icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow"
     }
   ]
 }
