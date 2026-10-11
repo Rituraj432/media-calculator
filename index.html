@@ -8,7 +8,8 @@
 <meta name="theme-color" content="#00f5ff">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; font-weight: 600; }
-  body { background: #0a0a0a; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; overflow: hidden; position: relative; touch-action: manipulation; }
+  /* पैडिंग बढ़ाई है ताकि कार्टून ऊपर-नीचे से न कटें */
+  body { background: #0a0a0a; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 40px 20px; overflow: hidden; position: relative; touch-action: manipulation; }
   .calc-container { position: relative; z-index: 10; width: 100%; max-width: 360px; margin: auto; }
   .calc { width: 100%; background: #111; border-radius: 40px; padding: 20px; box-shadow: 0 0 30px #00f5ff, 0 0 60px #a100ff; border: 2px solid #222; z-index: 2; position: relative; }
   .display { background: #000; border: 2px solid #00f5ff; border-radius: 25px; padding: 15px; height: 115px; display: flex; flex-direction: column; justify-content: center; align-items: flex-end; overflow: hidden; margin-bottom: 18px; }
@@ -22,11 +23,14 @@
   .op { background: #2a0a2a; color: #ff00ff; }
   .equal { background: linear-gradient(135deg,#00f5ff,#a100ff); color: #000; font-weight: bold; }
   .zero { grid-column: span 2; }
+  
+  /* कार्टून की पोज़िशन सेट की गई है ताकि वे स्क्रीन के अंदर रहें */
   .cartoon { position: absolute; pointer-events: none; z-index: 5; font-size: 45px; filter: drop-shadow(0 0 15px rgba(0, 245, 255, 0.6)); animation: float 4s ease-in-out infinite; }
-  .ufo { top: -35px; left: 0px; }
-  .planet { bottom: -35px; right: 0px; animation-delay: 1.5s; }
-  .astro { top: -35px; right: 0px; animation-delay: 0.7s; }
-  .rocket { bottom: -35px; left: 0px; animation-delay: 2.2s; font-size: 40px; transform: rotate(45deg); }
+  .ufo { top: -25px; left: -5px; }
+  .planet { bottom: -20px; right: -5px; animation-delay: 1.5s; }
+  .astro { top: -25px; right: -5px; animation-delay: 0.7s; }
+  .rocket { bottom: -20px; left: -5px; animation-delay: 2.2s; font-size: 38px; transform: rotate(45deg); }
+  
   @keyframes float { 0% { transform: translateY(0px) } 50% { transform: translateY(-12px) } 100% { transform: translateY(0px) } }
 </style>
 </head>
@@ -58,7 +62,6 @@ function updateDisplay() {
   let d = current; 
   resultEl.textContent = d.replace(/\*/g, '×').replace(/\//g, '÷').replace(/-/g, '−'); 
   resultEl.classList.remove('small','xsmall'); 
-  // डायनामिक फॉन्ट साइजिंग (ओवरफ्लो रोकने के लिए)
   if (d.length > 9) resultEl.classList.add('small'); 
   if (d.length > 15) resultEl.classList.add('xsmall'); 
 }
@@ -102,11 +105,8 @@ function calculate() {
     let original = current;
     let exp = current; 
     
-    // स्मार्ट परसेंटेज लॉजिक (बिना किसी बग के)
-    // 1. अगर प्लस या माइनस के साथ % है (जैसे 500+20% -> 600)
+    // स्मार्ट परसेंटेज लॉजिक
     exp = exp.replace(/(\d+\.?\d*)([\+\-])(\d+\.?\d*)%/g, '($1$2($1*$3/100))');
-    
-    // 2. अगर गुणा या भाग के साथ % है (जैसे 500/600% -> 83.33)
     exp = exp.replace(/(\d+\.?\d*)%/g, '($1/100)');
     
     let res = eval(exp); 
@@ -116,8 +116,8 @@ function calculate() {
     } else if (isNaN(res)) {
       current = 'Error';
     } else {
-      // 0.1+0.2 जैसे बग्स को रोकना और बहुत लंबे नंबर्स को लिमिट करना
-      current = String(Number(res.toPrecision(12)));
+      // यह लाइन exponential format (e+1) को हटाकर साधारण डेसिमल में रिज़ल्ट देगी
+      current = String(parseFloat(res.toFixed(10)));
     }
     
     historyEl.textContent = original.replace(/\*/g, '×').replace(/\//g, '÷') + ' ='; 
@@ -141,5 +141,4 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 </body>
- </html>
- 
+</html>
