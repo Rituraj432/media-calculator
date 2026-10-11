@@ -22,8 +22,6 @@
   .op { background: #2a0a2a; color: #ff00ff; }
   .equal { background: linear-gradient(135deg,#00f5ff,#a100ff); color: #000; font-weight: bold; }
   .zero { grid-column: span 2; }
-  
-  /* Cartoon Emojis Animations */
   .cartoon { position: absolute; pointer-events: none; z-index: 5; font-size: 45px; filter: drop-shadow(0 0 15px rgba(0, 245, 255, 0.6)); animation: float 4s ease-in-out infinite; }
   .ufo { top: -35px; left: 0px; }
   .planet { bottom: -35px; right: 0px; animation-delay: 1.5s; }
@@ -58,14 +56,11 @@ const ops = ['+', '-', '*', '/'];
 
 function updateDisplay() { 
   let d = current; 
-  if (!isNaN(Number(d)) && d.length > 12 && d !== 'Infinity') { 
-    let n = Number(d); 
-    d = (Math.abs(n) < 1 && n !== 0) ? n.toPrecision(8) : n.toExponential(6); 
-  } 
   resultEl.textContent = d.replace(/\*/g, '×').replace(/\//g, '÷').replace(/-/g, '−'); 
   resultEl.classList.remove('small','xsmall'); 
+  // डायनामिक फॉन्ट साइजिंग (ओवरफ्लो रोकने के लिए)
   if (d.length > 9) resultEl.classList.add('small'); 
-  if (d.length > 14) resultEl.classList.add('xsmall'); 
+  if (d.length > 15) resultEl.classList.add('xsmall'); 
 }
 
 function press(val) { 
@@ -76,20 +71,17 @@ function press(val) {
   
   let lastChar = current.slice(-1);
   
-  // ऑपरेटर रिप्लेसमेंट (ताकि ++ या ** जैसी गलती न हो)
   if (ops.includes(val) && ops.includes(lastChar)) {
     current = current.slice(0, -1) + val;
   }
   else if (current === '0' && !ops.includes(val) && val !== '.' && val !== '%') {
     current = val;
   } 
-  else if (val === '.' && current.includes('.')) {
-    // दशमलव (.) को चेक करना
+  else if (val === '.') {
     let parts = current.split(/[\+\-\*\/]/);
     if (!parts[parts.length - 1].includes('.')) { current += val; }
   } 
   else { current += val; }
-  
   updateDisplay(); 
 }
 
@@ -99,43 +91,53 @@ function clearAll() {
 
 function back() { 
   if (justCalculated) { clearAll(); return; } 
+  if (current === 'Error' || current === 'Infinity' || current === '-Infinity' || current === 'NaN') { clearAll(); return; }
   current = current.slice(0, -1) || '0'; 
   updateDisplay(); 
 }
 
 function calculate() { 
   try { 
-    // अगर आखिरी कैरेक्टर कोई ऑपरेटर है, तो उसे हटा दें (जैसे 5+ को 5 मान ले)
     if (ops.includes(current.slice(-1))) { current = current.slice(0, -1); }
-    
+    let original = current;
     let exp = current; 
-    if (exp.includes('%')) { exp = exp.replace(/(\d+\.?\d*)%/g, (_,n) => `(${n}/100)`); } 
+    
+    // स्मार्ट परसेंटेज लॉजिक (बिना किसी बग के)
+    // 1. अगर प्लस या माइनस के साथ % है (जैसे 500+20% -> 600)
+    exp = exp.replace(/(\d+\.?\d*)([\+\-])(\d+\.?\d*)%/g, '($1$2($1*$3/100))');
+    
+    // 2. अगर गुणा या भाग के साथ % है (जैसे 500/600% -> 83.33)
+    exp = exp.replace(/(\d+\.?\d*)%/g, '($1/100)');
     
     let res = eval(exp); 
     
-    // Infinity (Zero Division) हैंडलिंग
     if (res === Infinity || res === -Infinity) {
       current = 'Infinity';
+    } else if (isNaN(res)) {
+      current = 'Error';
     } else {
-      // फ्लोटिंग पॉइंट एरर फिक्स (जैसे 0.1 + 0.2 = 0.30000000000000004)
-      current = String(parseFloat(res.toFixed(10))); 
+      // 0.1+0.2 जैसे बग्स को रोकना और बहुत लंबे नंबर्स को लिमिट करना
+      current = String(Number(res.toPrecision(12)));
     }
     
-    historyEl.textContent = current === 'Infinity' ? current : exp.replace(/\*/g, '×').replace(/\//g, '÷') + ' ='; 
+    historyEl.textContent = original.replace(/\*/g, '×').replace(/\//g, '÷') + ' ='; 
     justCalculated = true; 
     updateDisplay(); 
   } catch(e) { 
     current = 'Error'; updateDisplay(); setTimeout(clearAll, 1200); 
   } 
 }
-
 updateDisplay();
 </script>
 <script>
 if ('serviceWorker' in navigator) { 
-  navigator.serviceWorker.register('./pwabuilder-sw.js').then(() => {
-    console.log("Service Worker Registered");
-  }); 
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./pwabuilder-sw.js').then(() => {
+      console.log("Service Worker Registered - Offline Ready");
+    }).catch((err) => {
+      console.log("Service Worker Failed: ", err);
+    });
+  });
 }
 </script>
 </body>
