@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.github.rituraj432.twa",
+      "sha256_cert_fingerprints": [
+        "02:66:F9:B1:04:1A:27:93:48:19:7A:08:A2:96:F6:28:FE:28:1F:BF:30:7E:CE:FD:0A:89:E5:D2:E3:BD:26:97"
+      ]
+    }
+  }
+]
