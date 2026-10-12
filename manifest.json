@@ -1,38 +1,48 @@
 {
-  "id": "/media-calculator/",
-  "name": "Mobile Calculator",
+  "name": "Mobile Calc - Neon Glow Calculator",
   "short_name": "Mobile Calc",
   "description": "A fast and stylish Mobile Calculator with neon cartoon design. Works offline.",
-  "start_url": "./",
-  "scope": "./",
+  "start_url": "./index.html",
   "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#00f5ff",
   "orientation": "portrait",
-  "background_color": "#0A0A0A",
-  "theme_color": "#00F5FF",
+  "categories": ["utilities", "productivity"],
   "icons": [
     {
-      "src": "./icon-512.png",
+      "src": "icon-512.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
-      "src": "./icon-512.png",
+      "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "./icon-512.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "./icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     }
-  ]
+  ],
+  "screenshots": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Calculator Screen"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Calculator Desktop Screen"
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "play",
+      "id": "io.github.rituraj432.twa"
+    }
+  ],
+  "prefer_related_applications": false
 }
