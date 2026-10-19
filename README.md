@@ -2,7 +2,7 @@
 
 ## 🔥 Neon Glow Mobile Calculator 🧮✨
 
-A fast, ultra-responsive, and modern web-based calculator featuring a vibrant neon glow dark theme. Designed specifically for seamless mobile and desktop use with zero bloat.
+A fast, ultra-responsive,and modern web-based calculator featuring a vibrant neon glow dark theme. Designed specifically for seamless mobile and desktop use with zero bloat.
 
 **🚀 Live Demo:** https://rituraj432.github.io/media-calculator/
 
