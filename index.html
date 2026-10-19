@@ -240,7 +240,7 @@ function doConvert() {
   const resEl = document.getElementById('convResult');
 
   if(isNaN(val)) { resEl.textContent = '0'; return; }
-
+if(val > 1e15 || val < -1e15) { resEl.textContent = 'Max Limit'; return; }
   if(cat === 'temperature') {
     let c;
     if(from === 'celsius') c = val;
@@ -255,7 +255,12 @@ function doConvert() {
   } else {
     let base = val / unitData[cat][from];
     let out = base * unitData[cat][to];
-    resEl.textContent = parseFloat(out.toFixed(4));
+      if (!isFinite(out) || out > 1e15 || out < -1e15) {
+      resEl.textContent = 'Out of Range';
+  } else {
+      resEl.textContent = parseFloat(out.toFixed(4));
+  }
+
   }
 }
 </script>
