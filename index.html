@@ -226,13 +226,7 @@ function updateUnits() {
   for(let unit in unitData[cat]) {
     let cleanName = unit.replace(/_/g, ' ').toUpperCase();
     fromSel.add(new Option(cleanName, unit));
-    toSel.add(new Option(cleanName, unit));
-  }
-  toSel.selectedIndex = 1 < toSel.options.length ? 1 : 0;
-  doConvert();
-}
-
-function doConvert() {
+    function doConvert() {
   const cat = document.getElementById('convCategory').value;
   const val = parseFloat(document.getElementById('convInput').value);
   const from = document.getElementById('convFrom').value;
@@ -240,21 +234,31 @@ function doConvert() {
   const resEl = document.getElementById('convResult');
 
   if(isNaN(val)) { resEl.textContent = '0'; return; }
-if(val > 1e15 || val < -1e15) { resEl.textContent = 'Max Limit'; return; }
+  if(val > 1e15 || val < -1e15) { resEl.textContent = 'Max Limit'; return; }
+
+  let out;
   if(cat === 'temperature') {
     let c;
     if(from === 'celsius') c = val;
     else if(from === 'fahrenheit') c = (val - 32) * 5/9;
     else if(from === 'kelvin') c = val - 273.15;
 
-    let out;
     if(to === 'celsius') out = c;
     else if(to === 'fahrenheit') out = (c * 9/5) + 32;
     else if(to === 'kelvin') out = c + 273.15;
-    resEl.textContent = parseFloat(out.toFixed(4));
   } else {
     let base = val / unitData[cat][from];
-    let out = base * unitData[cat][to];
+    out = base * unitData[cat][to];
+  }
+
+  // यह हिस्सा अब एकदम सही जगह (सबसे नीचे) है
+  if (!isFinite(out) || out > 1e15 || out < -1e15) {
+      resEl.textContent = 'Out of Range';
+  } else {
+      resEl.textContent = parseFloat(out.toFixed(4));
+  }
+}
+
       if (!isFinite(out) || out > 1e15 || out < -1e15) {
       resEl.textContent = 'Out of Range';
   } else {
