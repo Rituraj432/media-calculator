@@ -143,7 +143,7 @@ function updateDisplay() {
 }
 
 function press(val) { 
-  if (current.length >= 100 && !justCalculated && !ops.includes(val)) return;
+  if (current.length >= 15 && !justCalculated && !ops.includes(val)) return;
 
   if (justCalculated) { 
     if (ops.includes(val)) { justCalculated = false; } 
