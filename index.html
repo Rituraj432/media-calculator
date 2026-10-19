@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -9,7 +9,6 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; font-weight: 800; }
   
-  /* हैवी एनिमेटेड बैकग्राउंड */
   body { 
     background: linear-gradient(45deg, #050505, #1a0033, #001a33, #050505);
     background-size: 400% 400%;
@@ -21,7 +20,6 @@
 
   .calc-container { position: relative; z-index: 10; width: 100%; max-width: 380px; margin: auto; }
   
-  /* अल्ट्रा-ग्लोइंग कैलकुलेटर बॉडी */
   .calc { 
     width: 100%; background: rgba(15, 15, 15, 0.85); 
     backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -33,7 +31,6 @@
   }
   @keyframes neonPulse { from { box-shadow: 0 0 30px #00f5ff, 0 0 60px #a100ff; } to { box-shadow: 0 0 50px #00f5ff, 0 0 90px #ff00ff; border-color: rgba(255, 0, 255, 0.5); } }
 
-  /* 3D ग्लोइंग डिस्प्ले */
   .display { 
     background: #000; border: 2px solid #00f5ff; border-radius: 25px; padding: 20px; 
     height: 125px; display: flex; flex-direction: column; justify-content: center; align-items: flex-end; 
@@ -45,7 +42,6 @@
   .result.small { font-size: 32px; }
   .result.xsmall { font-size: 22px; }
 
-  /* प्रीमियम बटन्स */
   .buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
   button { 
     height: 70px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 22px; 
@@ -63,19 +59,29 @@
   .equal:active { transform: scale(0.85); box-shadow: 0 0 40px #fff; }
   .zero { grid-column: span 2; border-radius: 22px; }
 
-  /* कार्टून्स की पोज़िशन एकदम सुरक्षित */
+  /* कार्टून्स */
   .cartoon { position: absolute; pointer-events: none; z-index: 5; font-size: 55px; filter: drop-shadow(0 0 20px rgba(0, 245, 255, 0.8)); animation: floatHeavy 4s ease-in-out infinite; }
   .ufo { top: -35px; left: -15px; }
   .planet { bottom: -30px; right: -15px; animation-delay: 1.5s; font-size: 50px; }
   .astro { top: -35px; right: -15px; animation-delay: 0.7s; }
   .rocket { bottom: -30px; left: -15px; animation-delay: 2.2s; font-size: 45px; transform: rotate(45deg); filter: drop-shadow(0 0 20px rgba(255, 0, 255, 0.8)); }
-  
   @keyframes floatHeavy { 0% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-18px) rotate(5deg); } 100% { transform: translateY(0px) rotate(0deg); } }
+
+  /* कनवर्टर का नया डिज़ाइन */
+  .toggle-btn { margin-top: 20px; background: rgba(15,15,15,0.8); border: 2px solid #a100ff; color: #ff00ff; width: 100%; border-radius: 20px; height: 50px; font-size: 18px; box-shadow: 0 0 15px rgba(161,0,255,0.3); }
+  .toggle-btn:active { background: #ff00ff; color: #fff; box-shadow: 0 0 25px #ff00ff; }
+  
+  .converter-box { display: none; margin-top: 15px; background: rgba(15, 15, 15, 0.85); backdrop-filter: blur(20px); border-radius: 25px; padding: 20px; border: 2px solid #00f5ff; box-shadow: 0 0 20px rgba(0, 245, 255, 0.3); text-align: center; position: relative; z-index: 2; }
+  .converter-box.active { display: block; animation: neonPulse 3s infinite alternate; }
+  .conv-select, .conv-input { width: 100%; background: #050505; color: #00f5ff; border: 1px solid #00f5ff; border-radius: 12px; padding: 12px; margin-bottom: 12px; font-size: 16px; outline: none; font-weight: bold; }
+  .conv-select:focus, .conv-input:focus { box-shadow: 0 0 10px #00f5ff; }
+  .conv-result { font-size: 35px; color: #ff00ff; text-shadow: 0 0 15px #ff00ff; margin-top: 10px; word-break: break-all; min-height: 45px; }
 </style>
 </head>
 <body>
 <div class="calc-container">
   <div class="cartoon ufo">🛸</div><div class="cartoon astro">👨‍🚀</div><div class="cartoon rocket">🚀</div><div class="cartoon planet">🌙</div>
+  
   <div class="calc">
     <div class="display">
       <div class="history" id="history"></div>
@@ -103,8 +109,28 @@
       <button class="equal" onclick="calculate()">=</button>
     </div>
   </div>
+
+  <!-- यूनिट कनवर्टर सेक्शन -->
+  <button class="toggle-btn" onclick="toggleConverter()">💱 Unit Converter</button>
+  <div class="converter-box" id="converterBox">
+    <select class="conv-select" id="convCategory" onchange="updateUnits()">
+      <option value="length">📏 Length (लंबाई)</option>
+      <option value="mass">⚖️ Mass (वजन)</option>
+      <option value="volume">☕ Volume (आयतन)</option>
+      <option value="speed">🚀 Speed (गति)</option>
+      <option value="area">📐 Area (क्षेत्रफल)</option>
+      <option value="temperature">🌡️ Temperature (तापमान)</option>
+    </select>
+    <input type="number" class="conv-input" id="convInput" value="1" oninput="doConvert()" placeholder="Value">
+    <select class="conv-select" id="convFrom" onchange="doConvert()"></select>
+    <select class="conv-select" id="convTo" onchange="doConvert()"></select>
+    <div class="conv-result" id="convResult">0</div>
+  </div>
+
 </div>
+
 <script>
+// --- कैलकुलेटर का लॉजिक ---
 let current = '0'; 
 let justCalculated = false;
 const resultEl = document.getElementById('result'); 
@@ -134,7 +160,6 @@ function press(val) {
   } 
   else { current += val; }
   
-  // क्लिक करने पर हल्का वाइब्रेशन (अगर फोन सपोर्ट करे)
   if (navigator.vibrate) { navigator.vibrate(20); }
   updateDisplay(); 
 }
@@ -175,8 +200,68 @@ function calculate() {
   } 
 }
 updateDisplay();
+
+// --- कनवर्टर का लॉजिक ---
+const unitData = {
+  length: { meter: 1, kilometer: 0.001, centimeter: 100, millimeter: 1000, mile: 0.000621371, inch: 39.3701 },
+  mass: { kilogram: 1, gram: 1000, milligram: 1000000, pound: 2.20462, ounce: 35.274 },
+  volume: { liter: 1, milliliter: 1000, gallon_us: 0.264172, cup: 4.16667 },
+  speed: { meter_per_second: 1, kilometer_per_hour: 3.6, mile_per_hour: 2.23694 },
+  area: { square_meter: 1, square_kilometer: 0.000001, square_foot: 10.7639, acre: 0.000247105 },
+  temperature: { celsius: 'Celsius', fahrenheit: 'Fahrenheit', kelvin: 'Kelvin' }
+};
+
+function toggleConverter() {
+  const box = document.getElementById('converterBox');
+  box.classList.toggle('active');
+  if(box.classList.contains('active')) updateUnits();
+}
+
+function updateUnits() {
+  const cat = document.getElementById('convCategory').value;
+  const fromSel = document.getElementById('convFrom');
+  const toSel = document.getElementById('convTo');
+  fromSel.innerHTML = ''; toSel.innerHTML = '';
+  
+  for(let unit in unitData[cat]) {
+    let cleanName = unit.replace(/_/g, ' ').toUpperCase();
+    fromSel.add(new Option(cleanName, unit));
+    toSel.add(new Option(cleanName, unit));
+  }
+  toSel.selectedIndex = 1 < toSel.options.length ? 1 : 0;
+  doConvert();
+}
+
+function doConvert() {
+  const cat = document.getElementById('convCategory').value;
+  const val = parseFloat(document.getElementById('convInput').value);
+  const from = document.getElementById('convFrom').value;
+  const to = document.getElementById('convTo').value;
+  const resEl = document.getElementById('convResult');
+
+  if(isNaN(val)) { resEl.textContent = '0'; return; }
+
+  if(cat === 'temperature') {
+    let c;
+    if(from === 'celsius') c = val;
+    else if(from === 'fahrenheit') c = (val - 32) * 5/9;
+    else if(from === 'kelvin') c = val - 273.15;
+
+    let out;
+    if(to === 'celsius') out = c;
+    else if(to === 'fahrenheit') out = (c * 9/5) + 32;
+    else if(to === 'kelvin') out = c + 273.15;
+    resEl.textContent = parseFloat(out.toFixed(4));
+  } else {
+    let base = val / unitData[cat][from];
+    let out = base * unitData[cat][to];
+    resEl.textContent = parseFloat(out.toFixed(4));
+  }
+}
 </script>
+
 <script>
+// PWA सर्विस वर्कर
 if ('serviceWorker' in navigator) { 
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./pwabuilder-sw.js').then(() => {
@@ -188,4 +273,5 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 </body>
- </html>
+</html>
+
